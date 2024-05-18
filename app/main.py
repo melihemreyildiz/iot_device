@@ -43,7 +43,6 @@ def create_location_for_device(device_id: int, location: schemas.LocationCreate,
     if db_device is None:
         raise HTTPException(status_code=404, detail="Device not found")
     crud.create_location_via_celery(location=location, device_id=device_id)
-    # Return a dummy response as the actual creation is async
     return schemas.Location(id=0, device_id=device_id, **location.dict())
 
 

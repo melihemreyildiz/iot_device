@@ -3,8 +3,12 @@ import aio_pika
 from config import settings
 import json
 from celery import Celery
+import logging
 
 celery = Celery(__name__, broker=settings.rabbitmq_url)
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 async def handle_client(reader, writer):
@@ -12,11 +16,11 @@ async def handle_client(reader, writer):
     message = data.decode()
     addr = writer.get_extra_info('peername')
 
-    print(f"Received {message} from {addr}")
+    logger.info(f"Received {message} from {addr}")
 
     celery.send_task('app.tasks.process_location', args=[message])
 
-    print(f"Sent {message} to the queue")
+    logger.info(f"Sent {message} to the queue")
 
     writer.close()
 
@@ -25,11 +29,12 @@ async def main():
     server = await asyncio.start_server(handle_client, '0.0.0.0', 8888)
 
     addr = server.sockets[0].getsockname()
-    print(f'Serving on {addr}')
+    logger.info(f'Serving on {addr}')
 
     async with server:
         await server.serve_forever()
 
 
 if __name__ == "__main__":
+    logger.info("Starting TCP server")
     asyncio.run(main())

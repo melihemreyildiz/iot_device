@@ -8,6 +8,7 @@ class Device(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
+    #locations = relationship("Location", order_by="Location.id", back_populates="device")
 
 
 class Location(Base):

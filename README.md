@@ -42,8 +42,8 @@ The architecture consists of a FastAPI application that interacts with a Postgre
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/melihemreyildiz/iot_device
+cd iot_device
 ```
 
 ### 2. Environment Variables
